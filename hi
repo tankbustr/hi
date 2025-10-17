@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>The Corridor</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <canvas id="gameCanvas"></canvas>
+  <audio id="ambient" src="assets/ambient.mp3" loop></audio>
+  <script src="game.js"></script>
+</body>
+</html>
+body {
+  margin: 0;
+  overflow: hidden;
+  background-color: black;
+}
+
+canvas {
+  display: block;
+  width: 100vw;
+  height: 100vh;
+}
+const canvas = document.getElementById("gameCanvas");
+const ctx = canvas.getContext("2d");
+canvas.width = window.innerWidth;
+canvas.height = window.innerHeight;
+
+const ambient = document.getElementById("ambient");
+ambient.volume = 0.5;
+ambient.play();
+
+let player = {
+  x: canvas.width / 2,
+  y: canvas.height / 2,
+  speed: 5
+};
+
+let darkness = 0;
+
+function drawCorridor() {
+  ctx.fillStyle = `rgb(${darkness}, ${darkness}, ${darkness})`;
+  ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+  ctx.fillStyle = "white";
+  ctx.font = "30px Arial";
+  ctx.fillText("Find the exit...", 50, 50);
+}
+
+function update() {
+  darkness = Math.min(255, darkness + 0.5);
+  drawCorridor();
+  requestAnimationFrame(update);
+}
+
+document.addEventListener("keydown", (e) => {
+  if (e.key === "ArrowUp") player.y -= player.speed;
+  if (e.key === "ArrowDown") player.y += player.speed;
+  if (e.key === "ArrowLeft") player.x -= player.speed;
+  if (e.key === "ArrowRight") player.x += player.speed;
+});
+
+update();
